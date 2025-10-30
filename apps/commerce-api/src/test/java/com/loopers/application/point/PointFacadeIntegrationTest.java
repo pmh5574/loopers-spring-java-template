@@ -1,12 +1,13 @@
 package com.loopers.application.point;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.loopers.domain.user.Gender;
 import com.loopers.domain.user.UserModel;
-import com.loopers.infrastructure.point.PointJpaRepository;
 import com.loopers.infrastructure.user.UserJpaRepository;
+import com.loopers.support.error.CoreException;
 import com.loopers.utils.DatabaseCleanUp;
 import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
@@ -20,8 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class PointFacadeIntegrationTest {
     @Autowired
     private PointFacade pointFacade;
-    @Autowired
-    private PointJpaRepository pointJpaRepository;
     @Autowired
     private UserJpaRepository userJpaRepository;
     @Autowired
@@ -72,4 +71,19 @@ class PointFacadeIntegrationTest {
         }
     }
 
+    @DisplayName("포인트를 충전할 때, ")
+    @Nested
+    class Charge {
+        @DisplayName("존재하지 않는 유저 PK ID 로 충전을 시도한 경우, CoreException 예외가 발생한다.")
+        @Test
+        void throwsCoreException_whenNonExistingUserIdIsProvided() {
+            // arrange
+            Long userModelId = -1L;
+            PointInfo pointInfo = new PointInfo(null, userModelId, 100L);
+
+            // act & assert
+            assertThatThrownBy(() -> pointFacade.charge(pointInfo))
+                    .isInstanceOf(CoreException.class);
+        }
+    }
 }

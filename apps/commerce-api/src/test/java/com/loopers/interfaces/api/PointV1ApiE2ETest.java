@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.loopers.domain.user.Gender;
 import com.loopers.domain.user.UserModel;
 import com.loopers.infrastructure.user.UserJpaRepository;
+import com.loopers.interfaces.api.point.PointV1Dto.PointChargeResponse;
 import com.loopers.interfaces.api.point.PointV1Dto.PointResponse;
 import com.loopers.utils.DatabaseCleanUp;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PointV1ApiE2ETest {
     private static final String ENDPOINT_GET = "/api/v1/points";
+    private static final String ENDPOINT_CHARGE = "/api/v1/points/charge";
     private static final long INITIAL_POINT = 0L;
 
     private final TestRestTemplate testRestTemplate;
@@ -102,4 +104,49 @@ class PointV1ApiE2ETest {
         }
     }
 
+    @DisplayName("POST /api/v1/points/charge")
+    @Nested
+    class Charge {
+        @DisplayName("존재하는 유저가 1000원을 충전할 경우, 충전된 보유 총량을 응답으로 반환한다.")
+        @Test
+        void returnsTotalPoint_whenValidUserChargesPoint() {
+            // arrange
+            String userId = "test";
+            String email = "test@test.com";
+            LocalDate birthday = LocalDate.of(2020, 1, 1);
+            UserModel saveUserModel = userJpaRepository.save(
+                    UserModel.create(userId, email, birthday, Gender.MALE)
+            );
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-USER-ID", String.valueOf(saveUserModel.getId()));
+            long chargeAmount = 1000L;
+
+            // act
+            ParameterizedTypeReference<ApiResponse<PointChargeResponse>> responseType = new ParameterizedTypeReference<>() {
+            };
+            ResponseEntity<ApiResponse<PointChargeResponse>> response =
+                    testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, new HttpEntity<>(chargeAmount, headers), responseType);
+
+            // assert
+            assertThat(response.getBody().data().point()).isEqualTo(INITIAL_POINT + chargeAmount);
+        }
+
+        @DisplayName("존재하는 유저로 요청할 경우, 404 Not Found 응답을 반환한다.")
+        @Test
+        void returns404NotFound_whenUserDoesNotExist() {
+            // arrange
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-USER-ID", String.valueOf(-1L));
+            long chargeAmount = 1000L;
+
+            // act
+            ParameterizedTypeReference<ApiResponse<PointChargeResponse>> responseType = new ParameterizedTypeReference<>() {
+            };
+            ResponseEntity<ApiResponse<PointChargeResponse>> response =
+                    testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, new HttpEntity<>(chargeAmount, headers), responseType);
+
+            // assert
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -11,4 +11,10 @@ public class PointV1Dto {
             );
         }
     }
+
+    public record PointChargeResponse(Long point) {
+        public static PointV1Dto.PointChargeResponse from(Long point) {
+            return new PointV1Dto.PointChargeResponse(point);
+        }
+    }
 }

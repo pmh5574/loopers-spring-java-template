@@ -7,6 +7,7 @@ import com.loopers.domain.user.UserService;
 import com.loopers.support.error.CoreException;
 import com.loopers.support.error.ErrorType;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,5 +34,22 @@ public class PointFacade {
             return PointInfo.from(pointService.createInitPoint(userModel.getId()));
         }
         return PointInfo.from(pointModel);
+    }
+
+    @Transactional
+    public Long charge(final PointInfo pointInfo) {
+        if (Objects.isNull(pointInfo.userModelId())) {
+            throw new CoreException(ErrorType.BAD_REQUEST);
+        }
+        UserModel userModel = userFacade.getUser(pointInfo.userModelId());
+        if (Objects.isNull(userModel)) {
+            throw new CoreException(ErrorType.NOT_FOUND);
+        }
+
+        PointModel pointModel = Optional.ofNullable(
+                pointService.getPointByUserModelId(userModel.getId())
+        ).orElseGet(() -> pointService.createInitPoint(userModel.getId()));
+
+        return pointService.charge(pointModel, pointInfo.point());
     }
 }
