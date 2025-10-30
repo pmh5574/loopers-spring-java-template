@@ -18,4 +18,9 @@ public class UserService {
     public boolean existsByUserId(final String userId) {
         return userRepository.existsByUserId(userId);
     }
+
+    public UserModel getUser(final Long id) {
+        return userRepository.find(id)
+                .orElse(null);
+    }
 }

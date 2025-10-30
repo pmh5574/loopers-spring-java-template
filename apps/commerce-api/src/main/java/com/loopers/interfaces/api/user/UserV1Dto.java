@@ -29,4 +29,15 @@ public class UserV1Dto {
             );
         }
     }
+
+    public record UserResponse(Long id, String userId, String email, String birthday) {
+        public static UserResponse from(UserInfo info) {
+            return new UserResponse(
+                    info.id(),
+                    info.userId(),
+                    info.email(),
+                    info.birthday()
+            );
+        }
+    }
 }

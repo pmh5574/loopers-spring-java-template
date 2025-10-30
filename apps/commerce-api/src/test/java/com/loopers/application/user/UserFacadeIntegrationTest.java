@@ -1,6 +1,8 @@
 package com.loopers.application.user;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -73,4 +75,42 @@ class UserFacadeIntegrationTest {
         }
     }
 
+    @DisplayName("User를 조회할 때, ")
+    @Nested
+    class Get {
+        @DisplayName("존재하는 user ID의 회원이 존재할 경우, 해당 회원 정보를 반환한다.")
+        @Test
+        void returnsUserModel_whenValidIdIsProvided() {
+            // given
+            String userId = "test";
+            String email = "test@test.com";
+            LocalDate birthday = LocalDate.of(2020, 1, 1);
+            UserModel saveUserModel = userJpaRepository.save(
+                    UserModel.create(userId, email, birthday, Gender.MALE)
+            );
+
+            // when
+            UserInfo result = userFacade.getUser(saveUserModel.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(result).isNotNull(),
+                    () -> assertThat(result.id()).isEqualTo(saveUserModel.getId()),
+                    () -> assertThat(result.userId()).isEqualTo(saveUserModel.getUserId())
+            );
+        }
+
+        @DisplayName("해당 ID 의 회원이 존재하지 않을 경우, null 이 반환된다.")
+        @Test
+        void returnsNull_whenUserDoesNotExist() {
+            // given
+            Long userId = -1L;
+
+            // when
+            UserInfo result = userFacade.getUser(userId);
+
+            // then
+            assertThat(result).isNull();
+        }
+    }
 }
