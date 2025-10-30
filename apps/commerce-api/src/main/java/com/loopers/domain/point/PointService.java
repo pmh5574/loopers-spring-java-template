@@ -19,4 +19,9 @@ public class PointService {
     public PointModel createInitPoint(final Long userModelId) {
         return pointRepository.save(PointModel.create(userModelId));
     }
+
+    @Transactional
+    public Long charge(final PointModel pointModel, final Long point) {
+        return pointModel.charge(point);
+    }
 }
