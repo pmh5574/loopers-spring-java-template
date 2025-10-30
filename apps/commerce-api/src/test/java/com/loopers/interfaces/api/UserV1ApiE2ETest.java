@@ -5,10 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.loopers.domain.user.Gender;
+import com.loopers.domain.user.UserModel;
 import com.loopers.infrastructure.user.UserJpaRepository;
+import com.loopers.interfaces.api.user.UserV1Dto;
 import com.loopers.interfaces.api.user.UserV1Dto.UserSignUpRequest;
 import com.loopers.interfaces.api.user.UserV1Dto.UserSignUpResponse;
 import com.loopers.utils.DatabaseCleanUp;
+import java.time.LocalDate;
 import java.util.function.Function;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -102,6 +105,53 @@ class UserV1ApiE2ETest {
 
             // assert
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DisplayName("GET /api/v1/users/{id}")
+    @Nested
+    class Get {
+        @DisplayName("존재하는 user ID를 주면, 해당 user 정보를 반환한다.")
+        @Test
+        void returnsUserResponse_whenValidIdIsProvided() {
+            // arrange
+            String userId = "test";
+            String email = "test@test.com";
+            LocalDate birthday = LocalDate.of(2020, 1, 1);
+            UserModel saveUserModel = userJpaRepository.save(
+                    UserModel.create(userId, email, birthday, Gender.MALE)
+            );
+            String requestUrl = ENDPOINT_GET.apply(saveUserModel.getId());
+
+            // act
+            ParameterizedTypeReference<ApiResponse<UserV1Dto.UserResponse>> responseType = new ParameterizedTypeReference<>() {
+            };
+            ResponseEntity<ApiResponse<UserV1Dto.UserResponse>> response =
+                    testRestTemplate.exchange(requestUrl, HttpMethod.GET, new HttpEntity<>(null), responseType);
+
+            // assert
+            assertAll(
+                    () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
+                    () -> assertThat(response.getBody().data().id()).isEqualTo(saveUserModel.getId()),
+                    () -> assertThat(response.getBody().data().userId()).isEqualTo(saveUserModel.getUserId())
+            );
+        }
+
+        @DisplayName("존재하지 않는 yser ID를 주면, 404 NOT_FOUND 응답을 받는다.")
+        @Test
+        void throwsException_whenInvalidIdIsProvided() {
+            // arrange
+            Long invalidId = -1L;
+            String requestUrl = ENDPOINT_GET.apply(invalidId);
+
+            // act
+            ParameterizedTypeReference<ApiResponse<UserV1Dto.UserResponse>> responseType = new ParameterizedTypeReference<>() {
+            };
+            ResponseEntity<ApiResponse<UserV1Dto.UserResponse>> response =
+                    testRestTemplate.exchange(requestUrl, HttpMethod.GET, new HttpEntity<>(null), responseType);
+
+            // assert
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         }
     }
 }
