@@ -46,7 +46,7 @@ class PointFacadeIntegrationTest {
             UserModel userModel = userJpaRepository.save(saveUserModel);
 
             // act
-            PointInfo result = pointFacade.getPointByUserModelId(userModel.getId());
+            PointInfo result = pointFacade.getOrCreatePointByUserModelId(userModel.getId());
 
             // assert
             assertAll(
@@ -64,7 +64,7 @@ class PointFacadeIntegrationTest {
             Long userModelId = -1L;
 
             // act
-            PointInfo result = pointFacade.getPointByUserModelId(userModelId);
+            PointInfo result = pointFacade.getOrCreatePointByUserModelId(userModelId);
 
             // assert
             assertThat(result).isNull();

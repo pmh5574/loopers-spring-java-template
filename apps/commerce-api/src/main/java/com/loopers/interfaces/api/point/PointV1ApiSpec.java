@@ -26,7 +26,7 @@ public interface PointV1ApiSpec {
     )
     ApiResponse<PointChargeResponse> chargePoint(
             @Schema(name = "user PK ID", description = "충전할 Point의 User PK ID")
-            Long userModeId,
+            Long userModelId,
             @Schema(name = "충전할 pointChargeRequest", description = "충전할 pointChargeRequest")
             PointChargeRequest pointChargeRequest
     );

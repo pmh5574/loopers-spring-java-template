@@ -20,7 +20,7 @@ public class PointFacade {
     private final UserService userService;
 
     @Transactional
-    public PointInfo getPointByUserModelId(final Long userModelId) {
+    public PointInfo getOrCreatePointByUserModelId(final Long userModelId) {
         if (Objects.isNull(userModelId)) {
             throw new CoreException(ErrorType.BAD_REQUEST);
         }
