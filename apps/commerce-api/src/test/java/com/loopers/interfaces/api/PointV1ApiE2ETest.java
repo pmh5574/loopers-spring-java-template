@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.loopers.domain.user.Gender;
 import com.loopers.domain.user.UserModel;
 import com.loopers.infrastructure.user.UserJpaRepository;
+import com.loopers.interfaces.api.point.PointV1Dto.PointChargeRequest;
 import com.loopers.interfaces.api.point.PointV1Dto.PointChargeResponse;
 import com.loopers.interfaces.api.point.PointV1Dto.PointResponse;
 import com.loopers.utils.DatabaseCleanUp;
@@ -119,31 +120,31 @@ class PointV1ApiE2ETest {
             );
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-USER-ID", String.valueOf(saveUserModel.getId()));
-            long chargeAmount = 1000L;
+            PointChargeRequest request = new PointChargeRequest(1000L);
 
             // act
             ParameterizedTypeReference<ApiResponse<PointChargeResponse>> responseType = new ParameterizedTypeReference<>() {
             };
             ResponseEntity<ApiResponse<PointChargeResponse>> response =
-                    testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, new HttpEntity<>(chargeAmount, headers), responseType);
+                    testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, new HttpEntity<>(request, headers), responseType);
 
             // assert
-            assertThat(response.getBody().data().point()).isEqualTo(INITIAL_POINT + chargeAmount);
+            assertThat(response.getBody().data().point()).isEqualTo(INITIAL_POINT + request.point());
         }
 
-        @DisplayName("존재하는 유저로 요청할 경우, 404 Not Found 응답을 반환한다.")
+        @DisplayName("존재하지 않는 유저로 요청할 경우, 404 Not Found 응답을 반환한다.")
         @Test
         void returns404NotFound_whenUserDoesNotExist() {
             // arrange
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-USER-ID", String.valueOf(-1L));
-            long chargeAmount = 1000L;
+            PointChargeRequest request = new PointChargeRequest(1000L);
 
             // act
             ParameterizedTypeReference<ApiResponse<PointChargeResponse>> responseType = new ParameterizedTypeReference<>() {
             };
             ResponseEntity<ApiResponse<PointChargeResponse>> response =
-                    testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, new HttpEntity<>(chargeAmount, headers), responseType);
+                    testRestTemplate.exchange(ENDPOINT_CHARGE, HttpMethod.POST, new HttpEntity<>(request, headers), responseType);
 
             // assert
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

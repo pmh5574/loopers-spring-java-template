@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class PointFacade {
     private final PointService pointService;
-    private final UserService userFacade;
+    private final UserService userService;
 
     @Transactional
     public PointInfo getPointByUserModelId(final Long userModelId) {
         if (Objects.isNull(userModelId)) {
             throw new CoreException(ErrorType.BAD_REQUEST);
         }
-        UserModel userModel = userFacade.getUser(userModelId);
+        UserModel userModel = userService.getUser(userModelId);
         if (Objects.isNull(userModel)) {
             return null;
         }
@@ -41,7 +41,7 @@ public class PointFacade {
         if (Objects.isNull(pointInfo.userModelId())) {
             throw new CoreException(ErrorType.BAD_REQUEST);
         }
-        UserModel userModel = userFacade.getUser(pointInfo.userModelId());
+        UserModel userModel = userService.getUser(pointInfo.userModelId());
         if (Objects.isNull(userModel)) {
             throw new CoreException(ErrorType.NOT_FOUND);
         }

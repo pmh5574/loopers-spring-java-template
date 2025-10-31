@@ -31,7 +31,7 @@ public class UserModel extends BaseEntity {
 
     private static void validateUser(final String userId, final String email, final Gender gender) {
         if (Objects.isNull(userId) || userId.isBlank()) {
-            throw new CoreException(ErrorType.BAD_REQUEST, "ID는 영문 및 숫자로 이루어진 10글자 이내의 문자여야 합니다.");
+            throw new CoreException(ErrorType.BAD_REQUEST, "ID는 필수입니다.");
         }
         if (!userId.matches("^[a-zA-Z0-9]{1,10}$")) {
             throw new CoreException(ErrorType.BAD_REQUEST, "ID는 영문 및 숫자로 이루어진 10글자 이내의 문자여야 합니다.");

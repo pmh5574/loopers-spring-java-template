@@ -16,7 +16,7 @@ public class UserFacade {
     private final UserService userService;
 
     @Transactional
-    public UserInfo singUp(final UserInfo info) {
+    public UserInfo signUp(final UserInfo info) {
         if (userService.existsByUserId(info.userId())) {
             throw new CoreException(ErrorType.CONFLICT, "이미 존재하는 ID입니다.");
         }

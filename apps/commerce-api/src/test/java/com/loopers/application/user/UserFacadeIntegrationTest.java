@@ -48,7 +48,7 @@ class UserFacadeIntegrationTest {
             UserInfo userInfo = new UserInfo(null, userId, email, birthday, Gender.MALE);
 
             // when
-            userFacade.singUp(userInfo);
+            userFacade.signUp(userInfo);
 
             // then
             verify(userJpaRepository, times(1)).save(any(UserModel.class));
@@ -68,7 +68,7 @@ class UserFacadeIntegrationTest {
 
             // when & then
             assertThatThrownBy(() -> {
-                userFacade.singUp(userInfo);
+                userFacade.signUp(userInfo);
             })
                     .isInstanceOf(CoreException.class)
                     .hasMessage("이미 존재하는 ID입니다.");

@@ -6,6 +6,7 @@ import com.loopers.support.error.CoreException;
 import com.loopers.support.error.ErrorType;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Objects;
 import java.util.Optional;
 
 public record UserInfo(Long id, String userId, String email, String birthday, Gender gender) {
@@ -31,6 +32,10 @@ public record UserInfo(Long id, String userId, String email, String birthday, Ge
     }
 
     private LocalDate parseBirthday(String birthday) {
+        if (Objects.isNull(birthday)) {
+            return null;
+        }
+
         try {
             return LocalDate.parse(birthday);
         } catch (DateTimeParseException e) {

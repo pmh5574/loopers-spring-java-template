@@ -137,7 +137,7 @@ class UserV1ApiE2ETest {
             );
         }
 
-        @DisplayName("존재하지 않는 yser ID를 주면, 404 NOT_FOUND 응답을 받는다.")
+        @DisplayName("존재하지 않는 user ID를 주면, 404 NOT_FOUND 응답을 받는다.")
         @Test
         void throwsException_whenInvalidIdIsProvided() {
             // arrange

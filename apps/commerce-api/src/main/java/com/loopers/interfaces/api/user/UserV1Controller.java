@@ -28,7 +28,7 @@ public class UserV1Controller implements UserV1ApiSpec {
     @Override
     @PostMapping("")
     public ApiResponse<UserSignUpResponse> signUp(@RequestBody @Validated final UserSignUpRequest request) {
-        UserInfo info = userFacade.singUp(request.toInfo());
+        UserInfo info = userFacade.signUp(request.toInfo());
         UserV1Dto.UserSignUpResponse response = UserV1Dto.UserSignUpResponse.from(info);
         return ApiResponse.success(response);
     }

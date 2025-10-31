@@ -3,6 +3,7 @@ package com.loopers.interfaces.api.point;
 import com.loopers.application.point.PointFacade;
 import com.loopers.application.point.PointInfo;
 import com.loopers.interfaces.api.ApiResponse;
+import com.loopers.interfaces.api.point.PointV1Dto.PointChargeRequest;
 import com.loopers.interfaces.api.point.PointV1Dto.PointChargeResponse;
 import com.loopers.interfaces.api.point.PointV1Dto.PointResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class PointV1Controller implements PointV1ApiSpec {
 
     @Override
     @GetMapping("")
-    public ApiResponse<PointResponse> getPoint(@RequestHeader(value = "X-USER-ID", required = false) final Long userModeId) {
-        PointInfo pointInfo = pointFacade.getPointByUserModelId(userModeId);
+    public ApiResponse<PointResponse> getPoint(@RequestHeader(value = "X-USER-ID", required = false) final Long userModelId) {
+        PointInfo pointInfo = pointFacade.getPointByUserModelId(userModelId);
         return ApiResponse.success(PointV1Dto.PointResponse.from(pointInfo));
     }
 
@@ -30,9 +31,9 @@ public class PointV1Controller implements PointV1ApiSpec {
     @PostMapping("/charge")
     public ApiResponse<PointChargeResponse> chargePoint(
             @RequestHeader(value = "X-USER-ID", required = false) final Long userModeId,
-            @RequestBody final Long point
+            @RequestBody final PointChargeRequest pointChargeRequest
             ) {
-        Long resultPoint = pointFacade.charge(new PointInfo(null, userModeId, point));
+        Long resultPoint = pointFacade.charge(new PointInfo(null, userModeId, pointChargeRequest.point()));
         return ApiResponse.success(PointV1Dto.PointChargeResponse.from(resultPoint));
     }
 }

@@ -1,6 +1,7 @@
 package com.loopers.interfaces.api.point;
 
 import com.loopers.interfaces.api.ApiResponse;
+import com.loopers.interfaces.api.point.PointV1Dto.PointChargeRequest;
 import com.loopers.interfaces.api.point.PointV1Dto.PointChargeResponse;
 import com.loopers.interfaces.api.point.PointV1Dto.PointResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +17,7 @@ public interface PointV1ApiSpec {
     )
     ApiResponse<PointResponse> getPoint(
             @Schema(name = "user PK ID", description = "조회할 Point의 User PK ID")
-            Long userModeId
+            Long userModelId
     );
 
     @Operation(
@@ -26,7 +27,7 @@ public interface PointV1ApiSpec {
     ApiResponse<PointChargeResponse> chargePoint(
             @Schema(name = "user PK ID", description = "충전할 Point의 User PK ID")
             Long userModeId,
-            @Schema(name = "충전할 포인트", description = "충전할 point")
-            Long point
+            @Schema(name = "충전할 pointChargeRequest", description = "충전할 pointChargeRequest")
+            PointChargeRequest pointChargeRequest
     );
 }

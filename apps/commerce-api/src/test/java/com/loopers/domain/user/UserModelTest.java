@@ -51,8 +51,7 @@ class UserModelTest {
             assertThatThrownBy(() -> {
                 UserModel.create(invalidUserId, email, birthday, Gender.MALE);
             })
-                    .isInstanceOf(CoreException.class)
-                    .hasMessage("ID는 영문 및 숫자로 이루어진 10글자 이내의 문자여야 합니다.");
+                    .isInstanceOf(CoreException.class);
         }
 
         @DisplayName("email의 형식이 xx@yy.zz가 아니면, CoreException 예외가 발생한다.")
