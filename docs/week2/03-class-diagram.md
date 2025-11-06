@@ -74,7 +74,7 @@ classDiagram
         Order order
         paid()
     }
-
+ 
     Product --> Brand
     Stock --> Product
     StockHistory --> Stock
