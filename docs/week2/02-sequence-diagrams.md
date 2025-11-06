@@ -201,7 +201,7 @@ sequenceDiagram
 	participant PaymentService
 	participant PaymentRepository
 	participant ExternalSystem
-	
+	 
 	Client->>PaymentController: Post /api/payments/{paymentId} Header: X-USER-ID
 	alt X-USER-ID 존재
         PaymentController->>PaymentFacade: paidPayment(paymentId, userId)
