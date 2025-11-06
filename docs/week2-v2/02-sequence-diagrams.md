@@ -95,6 +95,7 @@ sequenceDiagram
             LikeFacade->>LikeController: Success
             LikeController->>Client: 200
         else 
+        Note right of LikeService: 좋아요 테이블 설계시 productId, userId에 복합 PK를 걸고 INSERT시 MySQL 기준 INSERT IGNORE를 사용하여 멱등성 처리 
             LikeService->>LikeRepository: save(Like)
             LikeService->>LikeFacade: Success
             LikeFacade->>LikeController: Success
