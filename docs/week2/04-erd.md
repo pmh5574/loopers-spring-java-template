@@ -59,7 +59,7 @@ erDiagram
         varchar point_type
         bigint point_id FK
         timestamp created_at
-    }
+    } 
     orders {
         bigint id PK
         bigint total_price
