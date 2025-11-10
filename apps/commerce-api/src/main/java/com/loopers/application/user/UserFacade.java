@@ -1,6 +1,6 @@
 package com.loopers.application.user;
 
-import com.loopers.domain.user.UserModel;
+import com.loopers.domain.user.User;
 import com.loopers.domain.user.UserService;
 import com.loopers.support.error.CoreException;
 import com.loopers.support.error.ErrorType;
@@ -20,16 +20,16 @@ public class UserFacade {
         if (userService.existsByUserId(info.userId())) {
             throw new CoreException(ErrorType.CONFLICT, "이미 존재하는 ID입니다.");
         }
-        UserModel userModel = userService.save(info.toModel());
-        return UserInfo.from(userModel);
+        User user = userService.save(info.toModel());
+        return UserInfo.from(user);
     }
 
     public UserInfo getUser(final Long id) {
-        UserModel userModel = userService.getUser(id);
-        if (Objects.isNull(userModel)) {
+        User user = userService.getUser(id);
+        if (Objects.isNull(user)) {
             return null;
 
         }
-        return UserInfo.from(userModel);
+        return UserInfo.from(user);
     }
 }

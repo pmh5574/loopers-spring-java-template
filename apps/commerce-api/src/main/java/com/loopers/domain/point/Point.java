@@ -10,9 +10,9 @@ import java.util.Objects;
 import lombok.Getter;
 
 @Getter
-@Table(name = "point")
+@Table(name = "points")
 @Entity
-public class PointModel extends BaseEntity {
+public class Point extends BaseEntity {
     private static final long INITIAL_POINT = 0L;
     private static final long MINIMUM_CHARGE_POINT = 0L;
 
@@ -21,11 +21,11 @@ public class PointModel extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private Long userModelId;
 
-    public static PointModel create(final Long userModelId) {
-        PointModel pointModel = new PointModel();
-        pointModel.point = INITIAL_POINT;
-        pointModel.userModelId = userModelId;
-        return pointModel;
+    public static Point create(final Long userModelId) {
+        Point point = new Point();
+        point.point = INITIAL_POINT;
+        point.userModelId = userModelId;
+        return point;
     }
 
     public Long charge(Long chargePoint) {

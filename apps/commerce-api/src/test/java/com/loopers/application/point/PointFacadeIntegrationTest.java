@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.loopers.domain.user.Gender;
-import com.loopers.domain.user.UserModel;
+import com.loopers.domain.user.User;
 import com.loopers.infrastructure.user.UserJpaRepository;
 import com.loopers.support.error.CoreException;
 import com.loopers.utils.DatabaseCleanUp;
@@ -42,17 +42,17 @@ class PointFacadeIntegrationTest {
             String userId = "test";
             String email = "test@test.com";
             LocalDate birthday = LocalDate.of(2020, 1, 1);
-            UserModel saveUserModel = UserModel.create(userId, email, birthday, Gender.MALE);
-            UserModel userModel = userJpaRepository.save(saveUserModel);
+            User saveUser = User.create(userId, email, birthday, Gender.MALE);
+            User user = userJpaRepository.save(saveUser);
 
             // act
-            PointInfo result = pointFacade.getOrCreatePointByUserModelId(userModel.getId());
+            PointInfo result = pointFacade.getOrCreatePointByUserModelId(user.getId());
 
             // assert
             assertAll(
                     () -> assertThat(result).isNotNull(),
                     () -> assertThat(result.id()).isNotNull(),
-                    () -> assertThat(result.userModelId()).isEqualTo(userModel.getId()),
+                    () -> assertThat(result.userModelId()).isEqualTo(user.getId()),
                     () -> assertThat(result.point()).isEqualTo(0L)
             );
         }

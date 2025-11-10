@@ -11,15 +11,15 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserModel save(UserModel userModel) {
-        return userRepository.save(userModel);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     public boolean existsByUserId(final String userId) {
         return userRepository.existsByUserId(userId);
     }
 
-    public UserModel getUser(final Long id) {
+    public User getUser(final Long id) {
         return userRepository.find(id)
                 .orElse(null);
     }

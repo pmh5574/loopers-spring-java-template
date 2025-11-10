@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class PointModelTest {
+class PointTest {
     private static final long INITIAL_POINT = 0L;
     private static final long MINIMUM_CHARGE_POINT = 0L;
 
@@ -23,13 +23,13 @@ class PointModelTest {
             Long userModeId = 1L;
 
             // act
-            PointModel pointModel = PointModel.create(userModeId);
+            Point point = Point.create(userModeId);
 
             // assert
             assertAll(
-                    () -> assertThat(pointModel.getId()).isNotNull(),
-                    () -> assertThat(pointModel.getUserModelId()).isEqualTo(userModeId),
-                    () -> assertThat(pointModel.getPoint()).isEqualTo(INITIAL_POINT)
+                    () -> assertThat(point.getId()).isNotNull(),
+                    () -> assertThat(point.getUserModelId()).isEqualTo(userModeId),
+                    () -> assertThat(point.getPoint()).isEqualTo(INITIAL_POINT)
             );
         }
     }
@@ -40,7 +40,7 @@ class PointModelTest {
         @Test
         void chargesPoint_whenPositiveAmountProvided() {
             // arrange
-            PointModel pointModel = PointModel.create(1L);
+            Point pointModel = Point.create(1L);
             Long point = 1L;
 
             // act
@@ -54,10 +54,10 @@ class PointModelTest {
         @Test
         void throwsCoreException_whenChargeAmountIsInvalid() {
             // arrange
-            PointModel pointModel = PointModel.create(1L);
+            Point point = Point.create(1L);
 
             // act & assert
-            assertThatThrownBy(() -> pointModel.charge(MINIMUM_CHARGE_POINT))
+            assertThatThrownBy(() -> point.charge(MINIMUM_CHARGE_POINT))
                     .isInstanceOf(CoreException.class)
                             .hasMessage(MINIMUM_CHARGE_POINT + " 초과의 포인트만 충전이 가능합니다.");
         }
