@@ -202,9 +202,9 @@ sequenceDiagram
 	
 	Client->>OrderController: Get /api/orders Header: X-USER-ID
         alt X-USER-ID 존재
-        OrderController->>OrderFacade: getList(orderId)
-        OrderFacade->>OrderService: getList(orderId)
-        OrderService->>OrderRepository: findList(orderId)
+        OrderController->>OrderFacade: getList(userId)
+        OrderFacade->>OrderService: getList(userId)
+        OrderService->>OrderRepository: findList(userId)
         OrderRepository->>OrderService: OrderList or Not Found
         OrderService-->>OrderFacade: OrderInfo
         OrderController-->>Client: 200 or 404 Not Found
