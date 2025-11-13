@@ -4,6 +4,7 @@ import com.loopers.domain.brand.Brand;
 import com.loopers.domain.brand.BrandService;
 import com.loopers.support.error.CoreException;
 import com.loopers.support.error.ErrorType;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,11 @@ public class ProductService {
         Product product = getProduct(productId);
         Brand brand = brandService.getBrand(product.getBrandId());
         return new ProductDetail(product, brand);
+    }
+
+    public ProductList getProducts(ProductSortType sortType) {
+        List<ProductListDetail> productListDetails = productRepository.getProducts(sortType);
+        return new ProductList(productListDetails);
     }
 
     public Product getProduct(final Long productId) {

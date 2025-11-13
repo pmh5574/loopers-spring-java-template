@@ -42,6 +42,10 @@ public class Product extends BaseEntity {
         return product;
     }
 
+    public void likeCountIncrease(int amount) {
+        this.likeCount = this.likeCount.increase(amount);
+    }
+
     private static void validateProductFields(final String name, final Integer price, final Long brandId) {
         if (name == null || name.isBlank()) {
             throw new CoreException(ErrorType.BAD_REQUEST, "이름은 비어있을 수 없습니다.");

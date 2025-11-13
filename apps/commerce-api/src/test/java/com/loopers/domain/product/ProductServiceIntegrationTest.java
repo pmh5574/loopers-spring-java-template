@@ -88,5 +88,55 @@ class ProductServiceIntegrationTest {
             );
         }
 
+        @Test
+        void 상품_리스트_조회시_최근순_정렬() {
+            // arrange
+            Brand brand = brandJpaRepository.save(Brand.create("brandTest"));
+            productJpaRepository.save(Product.create("testA", 1000, new Stock(2), brand.getId()));
+            productJpaRepository.save(Product.create("testB", 2000, new Stock(2), brand.getId()));
+            ProductSortType productSortType = ProductSortType.LATEST;
+
+            // act
+            ProductList products = productService.getProducts(productSortType);
+
+            assertThat(products.productListDetails()).hasSize(2)
+                    .extracting(ProductListDetail::name)
+                    .containsExactly("testB", "testA");
+        }
+
+        @Test
+        void 상품_리스트_조회시_가격_낮은순_정렬() {
+            // arrange
+            Brand brand = brandJpaRepository.save(Brand.create("brandTest"));
+            productJpaRepository.save(Product.create("testA", 1000, new Stock(2), brand.getId()));
+            productJpaRepository.save(Product.create("testB", 2000, new Stock(2), brand.getId()));
+            ProductSortType productSortType = ProductSortType.PRICE_ASC;
+
+            // act
+            ProductList products = productService.getProducts(productSortType);
+
+            assertThat(products.productListDetails()).hasSize(2)
+                    .extracting(ProductListDetail::price)
+                    .containsExactly(1000, 2000);
+        }
+
+        @Test
+        void 상품_리스트_조회시_좋아요_많은순_정렬() {
+            // arrange
+            Brand brand = brandJpaRepository.save(Brand.create("brandTest"));
+            productJpaRepository.save(Product.create("testA", 1000, new Stock(2), brand.getId()));
+            Product testB = Product.create("testB", 2000, new Stock(2), brand.getId());
+            testB.likeCountIncrease(30);
+            productJpaRepository.save(testB);
+            ProductSortType productSortType = ProductSortType.LIKES_DESC;
+
+            // act
+            ProductList products = productService.getProducts(productSortType);
+
+            assertThat(products.productListDetails()).hasSize(2)
+                    .extracting(ProductListDetail::name)
+                    .containsExactly("testB", "testA");
+        }
+
     }
 }
