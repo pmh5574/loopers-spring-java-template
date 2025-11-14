@@ -35,4 +35,15 @@ public class Point extends BaseEntity {
         this.point += chargePoint;
         return point;
     }
+
+    public Long usePoint(Long usePoint) {
+        if (Objects.isNull(usePoint) || usePoint <= MINIMUM_CHARGE_POINT) {
+            throw new CoreException(ErrorType.BAD_REQUEST, MINIMUM_CHARGE_POINT +" 초과의 포인트만 사용 가능합니다.");
+        }
+        if (this.point - usePoint < MINIMUM_CHARGE_POINT) {
+            throw new CoreException(ErrorType.BAD_REQUEST, "포인트가 부족합니다.");
+        }
+        this.point -= usePoint;
+        return this.point;
+    }
 }

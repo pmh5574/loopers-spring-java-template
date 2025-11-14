@@ -41,4 +41,8 @@ public class ProductService {
     public void likeCountDecrease(final Long productId, final int amount) {
         getProduct(productId).likeCountDecrease(amount);
     }
+
+    public List<Product> getProductIn(final List<Long> productIdList) {
+        return productRepository.findByIdIn(productIdList);
+    }
 }

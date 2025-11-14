@@ -11,6 +11,7 @@ import com.loopers.infrastructure.product.ProductJpaRepository;
 import com.loopers.support.error.CoreException;
 import com.loopers.support.error.ErrorType;
 import com.loopers.utils.DatabaseCleanUp;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -138,6 +139,18 @@ class ProductServiceIntegrationTest {
                     .containsExactly("testB", "testA");
         }
 
+        @Test
+        void 상품_조회시_LIST_상품_PK_ID를_주면_상품_LIST가_반환된다() {
+            // arrange
+            Product p1 = productJpaRepository.save(Product.create("p1", 10_000, new Stock(10), 1L));
+            Product p2 = productJpaRepository.save(Product.create("p2", 20_000, new Stock(5), 1L));
+
+            // act
+            List<Product> sut = productService.getProductIn(List.of(p1.getId(), p2.getId()));
+
+            // assert
+            assertThat(sut).hasSize(2);
+        }
     }
 
     @DisplayName("좋아요 수를 증가시킬 때,")

@@ -11,6 +11,7 @@ import com.loopers.domain.user.Gender;
 import com.loopers.domain.user.User;
 import com.loopers.infrastructure.user.UserJpaRepository;
 import com.loopers.support.error.CoreException;
+import com.loopers.support.error.ErrorType;
 import com.loopers.utils.DatabaseCleanUp;
 import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
@@ -100,17 +101,16 @@ class UserFacadeIntegrationTest {
             );
         }
 
-        @DisplayName("해당 ID 의 회원이 존재하지 않을 경우, null 이 반환된다.")
         @Test
-        void returnsNull_whenUserDoesNotExist() {
+        void 해당_ID_의_회원이_존재하지_않을_경우_NOTFOUND_오류가_발생한다() {
             // given
             Long userId = -1L;
 
-            // when
-            UserInfo result = userFacade.getUser(userId);
-
-            // then
-            assertThat(result).isNull();
+            // when && then
+            assertThatThrownBy(() -> userFacade.getUser(userId))
+                    .isInstanceOfSatisfying(CoreException.class, e -> {
+                        assertThat(e.getErrorType()).isEqualTo(ErrorType.NOT_FOUND);
+                    });
         }
     }
 }

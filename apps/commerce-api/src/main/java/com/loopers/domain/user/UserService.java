@@ -1,5 +1,7 @@
 package com.loopers.domain.user;
 
+import com.loopers.support.error.CoreException;
+import com.loopers.support.error.ErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,6 @@ public class UserService {
 
     public User getUser(final Long id) {
         return userRepository.find(id)
-                .orElse(null);
+                .orElseThrow(() -> new CoreException(ErrorType.NOT_FOUND,  "[id = " + id + "] 유저를 찾을 수 없습니다."));
     }
 }

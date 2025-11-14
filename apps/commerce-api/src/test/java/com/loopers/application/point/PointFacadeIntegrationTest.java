@@ -56,19 +56,6 @@ class PointFacadeIntegrationTest {
                     () -> assertThat(result.point()).isEqualTo(0L)
             );
         }
-
-        @DisplayName("해당 ID 의 회원이 존재하지 않을 경우, null 이 반환된다.")
-        @Test
-        void returnsNull_whenUserDoesNotExist() {
-            // arrange
-            Long userModelId = -1L;
-
-            // act
-            PointInfo result = pointFacade.getOrCreatePointByUserModelId(userModelId);
-
-            // assert
-            assertThat(result).isNull();
-        }
     }
 
     @DisplayName("포인트를 충전할 때, ")

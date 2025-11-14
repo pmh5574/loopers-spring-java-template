@@ -12,16 +12,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class ProductRepositoryImpl implements ProductRepository {
-    private final ProductJpaRepository repository;
-    private final ProductQueryRepository queryRepository;
+    private final ProductJpaRepository productJpaRepository;
+    private final ProductQueryRepository productQueryRepository;
 
     @Override
     public Optional<Product> findById(final Long productId) {
-        return repository.findById(productId);
+        return productJpaRepository.findById(productId);
     }
 
     @Override
     public List<ProductListDetail> getProducts(final ProductSortType sortType) {
-        return queryRepository.getProducts(sortType);
+        return productQueryRepository.getProducts(sortType);
+    }
+
+    @Override
+    public List<Product> findByIdIn(final List<Long> productIdList) {
+        return productJpaRepository.findByIdIn(productIdList);
     }
 }

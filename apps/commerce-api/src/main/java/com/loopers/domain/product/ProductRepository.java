@@ -7,4 +7,6 @@ public interface ProductRepository {
     Optional<Product> findById(Long productId);
 
     List<ProductListDetail> getProducts(ProductSortType sortType);
+
+    List<Product> findByIdIn(List<Long> productIdList);
 }
