@@ -36,4 +36,9 @@ public class ProductService {
     public void likeCountIncrease(final Long productId, final int amount) {
         getProduct(productId).likeCountIncrease(amount);
     }
+
+    @Transactional
+    public void likeCountDecrease(final Long productId, final int amount) {
+        getProduct(productId).likeCountDecrease(amount);
+    }
 }

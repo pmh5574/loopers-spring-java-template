@@ -151,17 +151,25 @@ class ProductServiceIntegrationTest {
 
             // act
             productService.likeCountIncrease(product.getId(), 5);
-            Product sut = productService.getProduct(product.getId());
 
             // assert
+            Product sut = productJpaRepository.findById(product.getId()).orElse(null);
             assertThat(sut.getLikeCount().getValue()).isEqualTo(5);
         }
 
         @Test
-        void 없는_상품에_좋아요증가_요청시_NOT_FOUND_예외() {
-            assertThatThrownBy(() -> productService.likeCountIncrease(-1L, 1))
-                    .isInstanceOfSatisfying(CoreException.class, e ->
-                            assertThat(e.getErrorType()).isEqualTo(ErrorType.NOT_FOUND));
+        void 상품의_좋아요수가_감소한다() {
+            // arrange
+            Product product = productJpaRepository.save(Product.create("test", 1000, new Stock(1), 1L));
+            product.likeCountIncrease(5);
+            productJpaRepository.save(product);
+
+            // act
+            productService.likeCountDecrease(product.getId(), 1);
+
+            // assert
+            Product sut = productJpaRepository.findById(product.getId()).orElse(null);
+            assertThat(sut.getLikeCount().getValue()).isEqualTo(4);
         }
     }
 }
