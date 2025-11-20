@@ -3,6 +3,7 @@ package com.loopers.domain.order;
 import com.loopers.domain.BaseEntity;
 import com.loopers.support.error.CoreException;
 import com.loopers.support.error.ErrorType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -12,9 +13,16 @@ import lombok.Getter;
 @Entity
 public class OrderItem extends BaseEntity {
 
+    @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = false)
     private Integer productPrice;
+
+    @Column(nullable = false)
     private Long productId;
+
+    @Column(nullable = false)
     private Long orderId;
 
     public static OrderItem create(final Integer quantity, final Integer productPrice, final Long productId,

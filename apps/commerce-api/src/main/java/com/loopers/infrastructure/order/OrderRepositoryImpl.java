@@ -14,9 +14,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final OrderItemJpaRepository orderItemJpaRepository;
 
     @Override
-    public Order save(final Order order, final List<OrderItem> orderItems) {
-        Order saveOrder = orderJpaRepository.save(order);
-        orderItemJpaRepository.saveAll(orderItems);
-        return saveOrder;
+    public Order save(final Order order) {
+        return orderJpaRepository.saveAndFlush(order);
+    }
+
+    @Override
+    public List<OrderItem> saveOrderItems(final List<OrderItem> orderItems) {
+        return orderItemJpaRepository.saveAllAndFlush(orderItems);
     }
 }

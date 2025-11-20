@@ -53,8 +53,8 @@ class ProductFacadeIntegrationTest {
 
             // assert
             assertAll(
-                    () -> assertThat(sut.product().getId()).isEqualTo(product.getId()),
-                    () -> assertThat(sut.brand().getId()).isEqualTo(brand.getId())
+                    () -> assertThat(sut.id()).isEqualTo(product.getId()),
+                    () -> assertThat(sut.brandId()).isEqualTo(brand.getId())
             );
         }
 
@@ -70,7 +70,7 @@ class ProductFacadeIntegrationTest {
             List<ProductWithBrandInfo> products = productFacade.getProductList(productSortType);
 
             assertThat(products).hasSize(2)
-                    .extracting(productWithBrandInfo -> productWithBrandInfo.product().getName())
+                    .extracting(ProductWithBrandInfo::name)
                     .containsExactly("testB", "testA");
         }
 
@@ -86,7 +86,7 @@ class ProductFacadeIntegrationTest {
             List<ProductWithBrandInfo> products = productFacade.getProductList(productSortType);
 
             assertThat(products).hasSize(2)
-                    .extracting(productWithBrandInfo -> productWithBrandInfo.product().getPrice())
+                    .extracting(ProductWithBrandInfo::price)
                     .containsExactly(1000, 2000);
         }
 
@@ -104,7 +104,7 @@ class ProductFacadeIntegrationTest {
             List<ProductWithBrandInfo> products = productFacade.getProductList(productSortType);
 
             assertThat(products).hasSize(2)
-                    .extracting(productWithBrandInfo -> productWithBrandInfo.product().getName())
+                    .extracting(ProductWithBrandInfo::name)
                     .containsExactly("testB", "testA");
         }
 

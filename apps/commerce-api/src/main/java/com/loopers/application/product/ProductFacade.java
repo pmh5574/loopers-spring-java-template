@@ -23,7 +23,7 @@ public class ProductFacade {
     public ProductWithBrandInfo getProductDetail(Long productId) {
         Product product = productService.getProduct(productId);
         Brand brand = brandService.getBrand(product.getBrandId());
-        return new ProductWithBrandInfo(product, brand);
+        return ProductWithBrandInfo.from(product, brand);
     }
 
     public List<ProductWithBrandInfo> getProductList(ProductSortType sortType) {
@@ -36,7 +36,7 @@ public class ProductFacade {
         Map<Long, Brand> brandMap = getBrandMapByBrandIds(brandIds);
 
         return products.stream()
-                .map(product -> new ProductWithBrandInfo(product, brandMap.get(product.getBrandId())))
+                .map(product -> ProductWithBrandInfo.from(product, brandMap.get(product.getBrandId())))
                 .toList();
     }
 
