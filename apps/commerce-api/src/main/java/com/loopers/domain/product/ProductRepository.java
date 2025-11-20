@@ -8,5 +8,5 @@ public interface ProductRepository {
 
     List<Product> getProductList(ProductSortType sortType);
 
-    List<Product> findByIdIn(List<Long> productIdList);
+    List<Product> findAllByIdInWithLock(List<Long> productIdList);
 }

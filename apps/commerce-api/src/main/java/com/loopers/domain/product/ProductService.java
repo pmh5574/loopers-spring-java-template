@@ -18,7 +18,7 @@ public class ProductService {
                 .orElseThrow(() -> new CoreException(ErrorType.NOT_FOUND, "[id = " + productId + "] 상품을 찾을 수 없습니다."));
     }
 
-    public List<Product> getProductList(ProductSortType sortType) {
+    public List<Product> getProductListWithLock(ProductSortType sortType) {
         return productRepository.getProductList(sortType);
     }
 
@@ -32,7 +32,8 @@ public class ProductService {
         getProduct(productId).likeCountDecrease(amount);
     }
 
-    public List<Product> getProductIn(final List<Long> productIdList) {
-        return productRepository.findByIdIn(productIdList);
+    @Transactional
+    public List<Product> getProductListWithLock(final List<Long> productIdList) {
+        return productRepository.findAllByIdInWithLock(productIdList);
     }
 }

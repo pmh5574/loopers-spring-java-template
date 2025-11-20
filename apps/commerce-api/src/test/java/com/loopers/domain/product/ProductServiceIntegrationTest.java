@@ -75,7 +75,7 @@ class ProductServiceIntegrationTest {
             Product p2 = productJpaRepository.save(Product.create("p2", 20_000, new Stock(5), 1L));
 
             // act
-            List<Product> sut = productService.getProductIn(List.of(p1.getId(), p2.getId()));
+            List<Product> sut = productService.getProductListWithLock(List.of(p1.getId(), p2.getId()));
 
             // assert
             assertThat(sut).hasSize(2);
