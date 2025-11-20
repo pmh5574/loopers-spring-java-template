@@ -114,5 +114,37 @@ class OrderFacadeIntegrationTest {
             Product sut = productJpaRepository.findById(product.getId()).orElseThrow();
             assertThat(sut.getStock().getQuantity()).isEqualTo(0);
         }
+
+        @Test
+        void 동일_유저가_동시에_여러_주문을_수행해도_포인트가_정상_차감된다() {
+
+            // given
+            User user = userJpaRepository.save(User.create("test", "test@test.com",
+                    LocalDate.of(2020,1,1), Gender.MALE));
+
+            Point point = Point.create(user.getId());
+            point.charge(10000L);
+            pointJpaRepository.save(point);
+
+            Product product = productJpaRepository.save(Product.create("p1", 1000, new Stock(10), 1L));
+            List<OrderCreateItemInfo> items = List.of(new OrderCreateItemInfo(product.getId(), 1));
+
+            int threadCount = 10;
+
+            // when
+            List<CompletableFuture<Void>> futures = IntStream.range(0, threadCount)
+                    .mapToObj(i -> CompletableFuture.runAsync(() -> {
+                        try {
+                            orderFacade.createOrder(user.getId(), items);
+                        } catch (Exception ignored) {}
+                    }))
+                    .toList();
+
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+            // then
+            Point sut = pointJpaRepository.findByUserId(user.getId()).orElse(null);
+            assertThat(sut.getPoint()).isEqualTo(0L);
+        }
     }
 }

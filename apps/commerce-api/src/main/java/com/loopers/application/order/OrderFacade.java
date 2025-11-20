@@ -56,7 +56,7 @@ public class OrderFacade {
                 .map(OrderItemInfo::from)
                 .toList();
 
-        Point point = pointService.getPointByUserModelId(userId);
+        Point point = pointService.getPointByUserIdWithLock(userId);
         point.usePoint(totalPrice);
 
         return OrderInfo.from(order, orderItemInfos);
