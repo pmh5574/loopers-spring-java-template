@@ -1,12 +1,10 @@
 package com.loopers.infrastructure.product;
 
-import static com.loopers.domain.brand.QBrand.brand;
 import static com.loopers.domain.product.QProduct.product;
 
-import com.loopers.domain.product.ProductListDetail;
+import com.loopers.domain.product.Product;
 import com.loopers.domain.product.ProductSortType;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +15,9 @@ import org.springframework.stereotype.Component;
 public class ProductQueryRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<ProductListDetail> getProducts(ProductSortType sortType) {
+    public List<Product> getProductList(ProductSortType sortType) {
         return queryFactory
-                .select(Projections.constructor(ProductListDetail.class,
-                        product.id,
-                        product.name,
-                        product.price,
-                        product.stock.quantity.as("stock"),
-                        product.likeCount.value.as("likeCount"),
-                        brand.id,
-                        brand.name)
-                )
-                .from(product)
-                .join(brand).on(product.brandId.eq(brand.id))
+                .selectFrom(product)
                 .orderBy(sortCondition(sortType))
                 .fetch();
     }

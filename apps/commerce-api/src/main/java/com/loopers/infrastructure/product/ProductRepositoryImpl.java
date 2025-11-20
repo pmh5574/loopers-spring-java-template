@@ -1,7 +1,6 @@
 package com.loopers.infrastructure.product;
 
 import com.loopers.domain.product.Product;
-import com.loopers.domain.product.ProductListDetail;
 import com.loopers.domain.product.ProductRepository;
 import com.loopers.domain.product.ProductSortType;
 import java.util.List;
@@ -21,8 +20,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductListDetail> getProducts(final ProductSortType sortType) {
-        return productQueryRepository.getProducts(sortType);
+    public List<Product> getProductList(final ProductSortType sortType) {
+        return productQueryRepository.getProductList(sortType);
     }
 
     @Override

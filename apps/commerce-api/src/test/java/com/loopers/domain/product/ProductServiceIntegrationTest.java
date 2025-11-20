@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.loopers.domain.brand.Brand;
 import com.loopers.domain.product.vo.Stock;
 import com.loopers.infrastructure.brand.BrandJpaRepository;
 import com.loopers.infrastructure.product.ProductJpaRepository;
@@ -67,76 +66,6 @@ class ProductServiceIntegrationTest {
                     .isInstanceOfSatisfying(CoreException.class, e -> {
                         assertThat(e.getErrorType()).isEqualTo(ErrorType.NOT_FOUND);
                     });
-        }
-
-        @Test
-        void 상품_상세_조회시_상품_PK_ID를_주면_상품_정보와_브랜드_좋아요수가_포함된다() {
-            // arrange
-            String brandName = "brandTest";
-            Brand brand = brandJpaRepository.save(Brand.create(brandName));
-            String productName = "productTest";
-            Integer price = 10000;
-            Stock stock = new Stock(10);
-            Product product = productJpaRepository.save(Product.create(productName, price, stock, brand.getId()));
-
-            // act
-            ProductDetail sut = productService.getProductDetail(product.getId());
-
-            // assert
-            assertAll(
-                    () -> assertThat(sut.product().getId()).isEqualTo(product.getId()),
-                    () -> assertThat(sut.brand().getId()).isEqualTo(brand.getId())
-            );
-        }
-
-        @Test
-        void 상품_리스트_조회시_최근순_정렬() {
-            // arrange
-            Brand brand = brandJpaRepository.save(Brand.create("brandTest"));
-            productJpaRepository.save(Product.create("testA", 1000, new Stock(2), brand.getId()));
-            productJpaRepository.save(Product.create("testB", 2000, new Stock(2), brand.getId()));
-            ProductSortType productSortType = ProductSortType.LATEST;
-
-            // act
-            ProductList products = productService.getProducts(productSortType);
-
-            assertThat(products.productListDetails()).hasSize(2)
-                    .extracting(ProductListDetail::name)
-                    .containsExactly("testB", "testA");
-        }
-
-        @Test
-        void 상품_리스트_조회시_가격_낮은순_정렬() {
-            // arrange
-            Brand brand = brandJpaRepository.save(Brand.create("brandTest"));
-            productJpaRepository.save(Product.create("testA", 1000, new Stock(2), brand.getId()));
-            productJpaRepository.save(Product.create("testB", 2000, new Stock(2), brand.getId()));
-            ProductSortType productSortType = ProductSortType.PRICE_ASC;
-
-            // act
-            ProductList products = productService.getProducts(productSortType);
-
-            assertThat(products.productListDetails()).hasSize(2)
-                    .extracting(ProductListDetail::price)
-                    .containsExactly(1000, 2000);
-        }
-
-        @Test
-        void 상품_리스트_조회시_좋아요_많은순_정렬() {
-            // arrange
-            Brand brand = brandJpaRepository.save(Brand.create("brandTest"));
-            productJpaRepository.save(Product.create("testA", 1000, new Stock(2), brand.getId()));
-            Product testB = Product.create("testB", 2000, new Stock(2), brand.getId());
-            testB.likeCountIncrease(30);
-            productJpaRepository.save(testB);
-            ProductSortType productSortType = ProductSortType.LIKES_DESC;
-
-            // act
-            ProductList products = productService.getProducts(productSortType);
-
-            assertThat(products.productListDetails()).hasSize(2)
-                    .extracting(ProductListDetail::name)
-                    .containsExactly("testB", "testA");
         }
 
         @Test

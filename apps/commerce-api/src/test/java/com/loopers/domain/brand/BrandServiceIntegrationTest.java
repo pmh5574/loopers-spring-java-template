@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.loopers.infrastructure.brand.BrandJpaRepository;
 import com.loopers.support.error.CoreException;
 import com.loopers.support.error.ErrorType;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,6 +50,22 @@ class BrandServiceIntegrationTest {
                     .isInstanceOfSatisfying(CoreException.class, e -> {
                         assertThat(e.getErrorType()).isEqualTo(ErrorType.NOT_FOUND);
                     });
+        }
+
+        @Test
+        void 브랜드_Set_Id로_조회시_브랜드_List가_반환된다() {
+            // arrange
+            String brandName = "brandTest";
+            Brand brand1 = brandJpaRepository.save(Brand.create(brandName));
+            Brand brand2 = brandJpaRepository.save(Brand.create(brandName));
+
+            // act
+            List<Brand> listByBrandIds = brandService.getListByBrandIds(Set.of(brand1.getId(), brand2.getId()));
+
+            // assert
+            assertAll(
+                    () -> assertThat(listByBrandIds).hasSize(2)
+            );
         }
     }
 }
